@@ -392,7 +392,7 @@ export const educationData = [
 <div>
     <table>
         <tr>
-            <td align="center"><a href="https://github.com/said7388"><img src="https://i.ibb.co/ZmdNH6x/abu-said.jpg" width="135px;" height="135px;" alt=""/><br /><b>Abu Said</b></a></td>
+            <td align="center"><a href="https://github.com/said7388"><img src="https://i.ibb.co/ZmdNH6x/abu-said.jpg" width="135px;" height="135px;" alt=""/><br /><b>Haroon Rasheed</b></a></td>
             <td align="center"><a href="https://github.com/hhhrrrttt222111"><img src="https://hhhrrrttt222111.web.app/static/media/dp.5f7c380f.jpeg" width="135px;" height="135px;" alt=""/><br /><b>Hemanth R</b></a></td>
         </tr>
     </table>
