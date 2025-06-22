@@ -6,7 +6,9 @@ import { aboutData } from "../../data/about-data";
 import styles from "../../styles/about.module.css";
 import dynamic from "next/dynamic";
 
-const AnimationLottie = dynamic(() => import("../Animation"), { ssr: false });
+const AnimationLottie = dynamic(() => import("../AnimationLottie"), {
+  ssr: false,
+});
 
 function About() {
   const { theme } = useContext(ThemeContext);
