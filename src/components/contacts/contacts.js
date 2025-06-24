@@ -1,8 +1,7 @@
-import emailjs from "@emailjs/browser";
+import React, { useContext, useRef, useState } from "react";
 import { IconButton, Snackbar, SnackbarContent } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import Image from "next/image";
-import React, { useContext, useRef, useState } from "react";
 import { AiOutlineCheckCircle, AiOutlineSend } from "react-icons/ai";
 import {
   FaFacebook,
@@ -14,7 +13,6 @@ import {
 } from "react-icons/fa";
 import { FiAtSign, FiPhone } from "react-icons/fi";
 import { HiOutlineLocationMarker } from "react-icons/hi";
-import isEmail from "validator/lib/isEmail";
 import { ThemeContext } from "../../contexts/theme-context";
 import { contactsData } from "../../data/contacts-data";
 import { socialsData } from "../../data/socials-data";
@@ -27,6 +25,7 @@ function Contacts() {
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useRef();
   const { theme } = useContext(ThemeContext);
 
@@ -37,39 +36,46 @@ function Contacts() {
     setOpen(false);
   };
 
-  const handleContactForm = (e) => {
+  const handleContactForm = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    if (name && email && message) {
-      if (isEmail(email)) {
-        emailjs
-          .sendForm(
-            process.env.REACT_APP_YOUR_SERVICE_ID,
-            process.env.REACT_APP_YOUR_TEMPLATE_ID,
-            form.current,
-            process.env.REACT_APP_YOUR_PUBLIC_KEY
-          )
-          .then(
-            (result) => {
-              console.log("success");
-              setSuccess(true);
-              setErrMsg("");
-              setName("");
-              setEmail("");
-              setMessage("");
-              setOpen(false);
-            },
-            (error) => {
-              console.log(error.text);
-            }
-          );
+    if (!name || !email || !message) {
+      setErrMsg("Please fill all the fields");
+      setOpen(true);
+      setIsSubmitting(false);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("message", message);
+    formData.append("access_key", "95f05b51-b212-4aee-8477-2662eb7f1aa2");
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccess(true);
+        setName("");
+        setEmail("");
+        setMessage("");
       } else {
-        setErrMsg("Invalid email");
+        setErrMsg(data.message || "Failed to submit form");
         setOpen(true);
       }
-    } else {
-      setErrMsg("Enter all the fields");
+    } catch (error) {
+      console.error("Error:", error);
+      setErrMsg("Error submitting form");
       setOpen(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -103,6 +109,7 @@ function Contacts() {
                                     border-2 border-[#8B98A5] bg-[#15202B]
                                      text-[#EFF3F4] font-medium transition 
                                      focus:border-[#1D9BF0]`}
+                  disabled={isSubmitting}
                 />
               </div>
               <div className={styles.inputContainer}>
@@ -125,6 +132,7 @@ function Contacts() {
                                     border-2 border-[#8B98A5] bg-[#15202B]
                                      text-[#EFF3F4] font-medium transition
                                       focus:border-[#1D9BF0]`}
+                  disabled={isSubmitting}
                 />
               </div>
               <div className={styles.inputContainer}>
@@ -147,6 +155,7 @@ function Contacts() {
                                     border-2 border-[#8B98A5] 
                                     focus:border-[#1D9BF0] bg-[#15202B]
                                      text-[#EFF3F4] font-medium transition`}
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -155,7 +164,8 @@ function Contacts() {
                   type="submit"
                   className="bg-[#1D9BF0] 
                                     hover:bg-[#8B98A5] text-[#15202B]
-                                     transition delay-200 "
+                                     transition delay-200"
+                  disabled={isSubmitting}
                 >
                   <p>{!success ? "Send" : "Sent"}</p>
                   <div className={styles.submitIcon}>
