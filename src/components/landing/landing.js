@@ -98,7 +98,7 @@ function Landing() {
             <div className={styles.lcrButtonContainer}>
               {headerData.resumePdf && (
                 <a
-                  href="/Haroon_Rasheed_Resume.pdf"
+                  href="/Haroon-Rasheed-FlowCV-Resume-20250711.pdf"
                   download
                   className="sm:w-[180px] text-[#1D9BF0] 
              rounded-[30px] no-underline w-36 text-base 
